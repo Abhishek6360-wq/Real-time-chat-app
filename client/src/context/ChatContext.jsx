@@ -439,12 +439,21 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
+    const clearChatUI = () => {
+        if (!activeChat) return;
+        setMessages([]);
+        setChats(prevChats => prevChats.map(c =>
+            c._id === activeChat._id ? { ...c, lastMessage: null, unreadCount: 0 } : c
+        ));
+    };
+
     return (
         <ChatContext.Provider value={{
             chats, activeChat, setActiveChat, messages, loadingChats,
             loadingMessages, hasMoreMessages, loadChats,
             selectChat, sendMessage, loadMoreMessages,
-            sendMediaMessage, isViewingArchived, setIsViewingArchived
+            sendMediaMessage, isViewingArchived, setIsViewingArchived,
+            clearChatUI
         }}>
             {children}
         </ChatContext.Provider>

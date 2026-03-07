@@ -8,7 +8,7 @@ import './CreateGroupModal.css'; // Reusing established modal CSS
 
 const ChatInfoModal = ({ isOpen, onClose }) => {
     const { user } = useAuth();
-    const { activeChat, setActiveChat, loadChats } = useChat();
+    const { activeChat, setActiveChat, loadChats, clearChatUI } = useChat();
 
     const [groupName, setGroupName] = useState('');
     const [isRenaming, setIsRenaming] = useState(false);
@@ -140,6 +140,14 @@ const ChatInfoModal = ({ isOpen, onClose }) => {
             loadChats(); // refresh sidebar based on active tab
         } catch (error) {
             toast.error("Failed to update archive status");
+        }
+    };
+
+    const handleClearChat = () => {
+        if (window.confirm("Are you sure you want to clear this chat from your screen? (This will not delete messages from the database.)")) {
+            clearChatUI();
+            toast.success("Chat cleared locally");
+            onClose();
         }
     };
 
@@ -294,8 +302,16 @@ const ChatInfoModal = ({ isOpen, onClose }) => {
                     )}
                 </div>
 
-                <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between', gap: '15px', padding: '15px 20px', borderTop: '1px solid #e2e8f0', marginTop: '20px' }}>
-                    {isGroup && <button className="btn-cancel" onClick={handleLeaveGroup} style={{ color: '#ef4444', borderColor: '#ef4444', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', background: '#fee2e2', border: 'none', fontWeight: 600 }}>Leave Group</button>}
+                <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between', gap: '15px', padding: '15px 20px', borderTop: '1px solid #e2e8f0', marginTop: '20px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        {isGroup && <button className="btn-cancel" onClick={handleLeaveGroup} style={{ color: '#ef4444', borderColor: '#ef4444', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', background: '#fee2e2', border: 'none', fontWeight: 600 }}>Leave Group</button>}
+                        <button
+                            onClick={handleClearChat}
+                            style={{ color: '#ef4444', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', background: '#fee2e2', border: 'none', fontWeight: 600 }}
+                        >
+                            Clear Chat
+                        </button>
+                    </div>
 
                     <div style={{ marginLeft: 'auto', display: 'flex', gap: '15px' }}>
                         <button
