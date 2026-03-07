@@ -7,7 +7,7 @@ import './Chatroom.css';
 
 const Chatroom = () => {
   const [message, setMessage] = useState('');
-  const { activeChat, messages, sendMessage, sendMediaMessage, loadMoreMessages, loadingMessages, hasMoreMessages } = useChat();
+  const { activeChat, messages, sendMessage, sendMediaMessage, loadMoreMessages, loadingMessages, hasMoreMessages, setActiveChat } = useChat();
   const { user } = useAuth();
   const messagesEndRef = useRef(null);
   const messagesAreaRef = useRef(null);
@@ -208,9 +208,21 @@ const Chatroom = () => {
         <div
           className="chat-header-info"
           onClick={() => setIsGroupInfoOpen(true)}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
           title="Click for Chat Info"
         >
+          {/* Mobile Back Button */}
+          <button
+            className="mobile-back-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveChat(null);
+            }}
+            title="Back to Chats"
+          >
+            ←
+          </button>
+
           <div
             className="header-avatar"
             style={{

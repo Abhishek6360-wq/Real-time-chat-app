@@ -224,3 +224,15 @@
 .search-result-item:hover {
     background-color: var(--bg-main);
 }
+
+/* --- Mobile Specific Sidebar Styles --- */
+@media (max-width: 768px) {
+    .sidebar-container {
+        width: 100%;
+        border-right: none;
+    }
+
+    .modal-content {
+        width: 95%;
+    }
+}
