@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // The base URL for your backend server
-const backendurl = import.meta.env.VITE_BACKEND_URL;
+const backendurl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 export const fetchAllChats = async (isArchived = false) => {
     const token = localStorage.getItem('token');
