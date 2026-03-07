@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useChat } from '../context/ChatContext';
 
 const Dashboardlayout = () => {
-  const { activeChat } = useChat();
+  const { activeChat, setActiveChat } = useChat();
+
+  // Intercept the browser/hardware "Back" button on mobile
+  useEffect(() => {
+    // Only intercept if we are actively viewing a chat on a mobile-sized screen
+    if (activeChat && window.innerWidth <= 768) {
+      window.history.pushState(null, '', window.location.href);
+
+      const handlePopState = () => {
+        // When the user hits the back button, clear the active chat instead of leaving the page
+        setActiveChat(null);
+      };
+
+      window.addEventListener('popstate', handlePopState);
+
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, [activeChat, setActiveChat]);
 
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden' }}>
