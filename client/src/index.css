@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* Tailwind is imported out of caution if user has existing classes, but we rely on these CSS Variables for our custom UI */
+@import "tailwindcss";
+
+:root {
+  /* Sleek Professional Light Theme Palette */
+  --bg-main: #f8fafc;
+  /* Subtle slate background */
+  --bg-surface: #ffffff;
+  /* Solid white for cards/panels */
+  --bg-surface-hover: #f1f5f9;
+  /* Light blue-gray for hover states */
+
+  --primary-color: #3b82f6;
+  /* Professional Slate Blue */
+  --primary-hover: #2563eb;
+  /* Deeper Blue */
+  --secondary-color: #60a5fa;
+  /* Soft Accent Blue */
+
+  --text-main: #0f172a;
+  /* Near black */
+  --text-muted: #64748b;
+  /* Sleek medium gray */
+  --text-dark: #1e293b;
+  /* Deep slate */
+
+  --border-color: #e2e8f0;
+  /* Light gray borders */
+  --border-light: #f1f5f9;
+
+  --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.025);
+  /* Reused name, but it's a solid shadow now */
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Base styles to hide scrollbar but keep functionality */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Form Shared utility classes for UI components */
+.input-field {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.input-field::placeholder {
+  color: #94a3b8;
+}
+
+.input-field:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -2px rgba(59, 130, 246, 0.1);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.2);
+}
