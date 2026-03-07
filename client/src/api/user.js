@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const backendurl = 'http://localhost:5000';
+const backendurl = import.meta.env.VITE_BACKEND_URL;
 
 export const updateProfile = async (formData) => {
     const token = localStorage.getItem('token');
