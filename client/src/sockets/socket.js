@@ -95,3 +95,9 @@ export const subscribeToProfileUpdates = (cb) => {
     socket.off('profile_updated');
     socket.on('profile_updated', (data) => cb(null, data));
 };
+
+export const subscribeToGroupRemoval = (cb) => {
+    if (!socket) return true;
+    socket.off('removed_from_group');
+    socket.on('removed_from_group', (data) => cb(null, data));
+};

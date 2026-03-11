@@ -147,6 +147,9 @@ const removeMemberController = async (req, res, next) => {
         io.to(chatId).emit("group_updated", updatedChat);
         io.to(userId).emit("new_notification", notification);
 
+        // Tell the user's client they've been removed to clear UI
+        io.to(userId).emit("removed_from_group", { chatId });
+
         io.in(userId).socketsLeave(chatId);
 
         res.status(200).json({ success: true, data: updatedChat });
@@ -242,7 +245,6 @@ const renameGroupController = async (req, res, next) => {
 };
 
 // http request to leave group
-// http request to leave group
 const leaveGroupController = async (req, res, next) => {
     try {
         const userId = req.user.userId;
@@ -250,6 +252,13 @@ const leaveGroupController = async (req, res, next) => {
         const io = req.app.get("io");
 
         const updatedChat = await leaveGroup(chatId, userId);
+
+        if (updatedChat.deleted) {
+            io.to(chatId).emit("group_deleted", { chatId });
+            io.to(userId).emit("removed_from_group", { chatId });
+            io.in(userId).socketsLeave(chatId);
+            return res.status(200).json({ success: true, message: "group deleted", data: updatedChat });
+        }
 
         // notify remaining participants
         for (let participant of updatedChat.participants) {
@@ -268,6 +277,9 @@ const leaveGroupController = async (req, res, next) => {
 
         io.to(chatId).emit("group_updated", updatedChat);
 
+        // tell the leaving user to wipe the UI
+        io.to(userId).emit("removed_from_group", { chatId });
+
         // remove all sockets of this user from room
         io.in(userId).socketsLeave(chatId);
 
@@ -278,7 +290,7 @@ const leaveGroupController = async (req, res, next) => {
     }
 };
 
-// http request to delete a group
+
 // http request to delete group
 const deleteGroupController = async (req, res, next) => {
     try {
@@ -300,6 +312,9 @@ const deleteGroupController = async (req, res, next) => {
             });
 
             io.to(participantId).emit("new_notification", notification);
+
+            // tell all participants to clear UI
+            io.to(participantId).emit("removed_from_group", { chatId });
 
             io.in(participantId).socketsLeave(chatId);
         }

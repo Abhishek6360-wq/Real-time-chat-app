@@ -383,7 +383,18 @@ const leaveGroup = async (chatId, userId) => {
     );
 
     if (isAdmin && chat.admins.length === 1) {
-        throw new Error("cannot leave as last admin");
+        if (chat.participants.length > 1) {
+            // Find another participant to make admin
+            const newAdminId = chat.participants.find(id => id.toString() !== userId.toString());
+            if (newAdminId) {
+                chat.admins.push(newAdminId);
+            }
+        } else {
+            // Last member leaving, delete the group and messages
+            await messagemodel.deleteMany({ chat: chatId });
+            await chatmodel.findByIdAndDelete(chatId);
+            return { deleted: true, _id: chatId, participants: [] };
+        }
     }
 
     chat.participants.pull(userId);

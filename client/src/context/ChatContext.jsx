@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { fetchAllChats, fetchMessages, sendMessage as sendMessageApi, markMessagesAsRead, sendMessageWithMedia as sendMessageWithMediaApi } from '../api/chat';
-import { initiateSocketConnection, disconnectSocket, subscribeToMessages, joinChatRoom, subscribeToPresence, subscribeToMessageStatus, emitMessageReceived, subscribeToNewChats, subscribeToProfileUpdates } from '../sockets/socket';
+import { initiateSocketConnection, disconnectSocket, subscribeToMessages, joinChatRoom, subscribeToPresence, subscribeToMessageStatus, emitMessageReceived, subscribeToNewChats, subscribeToProfileUpdates, subscribeToGroupRemoval } from '../sockets/socket';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-hot-toast';
 
@@ -250,6 +250,27 @@ export const ChatProvider = ({ children }) => {
                 // Prevent duplicates
                 if (prev.some(c => c._id === newChat._id)) return prev;
                 return [newChat, ...prev];
+            });
+        });
+    }, [user]);
+
+    // Handle being removed from a group or the group being deleted
+    useEffect(() => {
+        if (!user) return;
+        subscribeToGroupRemoval((err, data) => {
+            if (err) return;
+            const { chatId } = data;
+
+            // Remove it from the sidebar list immediately
+            setChats(prevChats => prevChats.filter(c => c._id !== chatId));
+
+            // If the user is currently staring at this chat, close it
+            setActiveChat(prev => {
+                if (prev && prev._id === chatId) {
+                    toast.error("You are no longer a participant in this chat.");
+                    return null;
+                }
+                return prev;
             });
         });
     }, [user]);
